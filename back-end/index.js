@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import passport from "passport";
 import cookieSession from "cookie-session";
+import cors from "cors";
 
 import "./config.js";
 import "./models/User.js";
@@ -14,11 +15,19 @@ import blogroutes from "./routes/blogRoutes.js";
 mongoose.Promise = global.Promise;
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
+  .then(async () => {
+    console.log("MongoDB connected");
+  })
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const app = express();
 
+app.use(
+  cors({
+    origin: process.env.PUBLIC_SITE_URL, // Your Nuxt app URL
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 app.use(
@@ -27,6 +36,20 @@ app.use(
     keys: [process.env.SESSION_SECRET],
   })
 );
+
+app.use((req, res, next) => {
+  if (req.session && !req.session.regenerate) {
+    req.session.regenerate = (cb) => {
+      cb();
+    };
+  }
+  if (req.session && !req.session.save) {
+    req.session.save = (cb) => {
+      cb();
+    };
+  }
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());

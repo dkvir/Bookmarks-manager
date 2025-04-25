@@ -26,8 +26,12 @@ export default defineNuxtConfig({
       // link: [...favicon.links],
     },
   },
-  gtag: {
-    id: "G-21R6N9EPX6",
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.PUBLIC_SITE_URL,
+      apiRoot: process.env.API_ROOT,
+      backUrl: process.env.BACKEND_URL,
+    },
   },
   css: ["@/assets/sass/style.scss"],
   vite: {

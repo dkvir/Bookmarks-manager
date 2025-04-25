@@ -12,13 +12,17 @@ const authRoutes = (app) => {
     "/auth/google/callback",
     passport.authenticate("google"),
     (req, res) => {
-      res.redirect("/blogs");
+      res.redirect(process.env.PUBLIC_SITE_URL + "/blogs");
     }
   );
 
-  app.get("/auth/logout", (req, res) => {
-    req.logout();
-    res.redirect("/");
+  app.get("/auth/logout", (req, res, next) => {
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(process.env.PUBLIC_SITE_URL);
+    });
   });
 
   app.get("/api/current_user", (req, res) => {
