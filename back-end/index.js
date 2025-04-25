@@ -1,9 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
+import passport from "passport";
+import cookieSession from "cookie-session";
 
-dotenv.config();
+import "./config.js";
+import "./models/User.js";
+import "./models/Blog.js";
+import "./services/passport.js";
+import authRoutes from "./routes/authRoutes.js";
+import blogroutes from "./routes/blogRoutes.js";
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -15,11 +21,24 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.SESSION_SECRET],
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+authRoutes(app);
+blogroutes(app);
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Listening on port`, PORT);
 });
