@@ -1,6 +1,9 @@
 <template>
   <div class="new-blog">
     <h1 class="title">Create a New Blog</h1>
+    <div v-if="blogStore.error" class="error-message">
+      {{ blogStore.error }}
+    </div>
     <form class="form" @submit.prevent="createBlog">
       <div class="form-group">
         <label class="label uppercase" for="title">blog title</label>
@@ -24,18 +27,45 @@
           rows="10"
         ></textarea>
       </div>
-      <button class="button" type="submit">Create Blog</button>
+      <button class="button" type="submit" :disabled="blogStore.loading">
+        {{ blogStore.loading ? "Creating..." : "Create Blog" }}
+      </button>
     </form>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
+import { useBlogStore } from "@/store/blogs";
+
+const router = useRouter();
+const blogStore = useBlogStore();
+
 const blog = reactive({
   title: "",
   content: "",
 });
 
-const createBlog = () => {};
+const createBlog = async () => {
+  if (!blog.title || !blog.content) {
+    blogStore.error = "Title and content are required";
+    return;
+  }
+
+  const result = await blogStore.createBlog({
+    title: blog.title,
+    content: blog.content,
+  });
+
+  if (result.success) {
+    // Reset form
+    blog.title = "";
+    blog.content = "";
+
+    // Redirect to blogs list page
+    router.push("/blogs");
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -47,6 +77,13 @@ const createBlog = () => {};
     margin-bottom: 20px;
     font-size: 48px;
     font-family: var(--ping-regular);
+  }
+  .error-message {
+    background-color: var(--color-bird);
+    color: var(--color-alligator);
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
   }
   .form {
     width: 100%;
@@ -89,6 +126,10 @@ const createBlog = () => {};
       cursor: pointer;
       &:hover {
         --button-hover: var(--color-sapphire);
+      }
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
       }
     }
   }

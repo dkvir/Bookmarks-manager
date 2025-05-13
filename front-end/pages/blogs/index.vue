@@ -13,6 +13,7 @@
         :loading="blogStore.loading"
       />
     </ClientOnly>
+    <nuxt-link to="/blogs/new" class="new-blog flex-center">+</nuxt-link>
   </div>
 </template>
 
@@ -39,6 +40,20 @@ await blogStore.fetchBlogs();
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 20px;
+  }
+  .new-blog {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    font-size: 36px;
+    border-radius: 50%;
+    color: var(--color-white);
+    background-color: var(--button-hover, var(--color-seljuk));
+    @include default-transitions(background-color);
+    @include size(100px);
+    &:hover {
+      --button-hover: var(--color-sapphire);
+    }
   }
 }
 </style>
