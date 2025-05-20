@@ -32,7 +32,7 @@ const props = defineProps({
 
     .blog-link {
       text-decoration: none;
-      color: var(--color-black);
+      color: var(--color-dynamic);
     }
 
     .blog-title {

@@ -1,3 +1,9 @@
 .no-padding {
   padding: 0;
 }
+.page-component {
+  width: 100vw;
+  min-height: 100vh;
+  padding: var(--page-offset-padding);
+  padding-top: calc(var(--app-header-height) + var(--page-offset-padding));
+}

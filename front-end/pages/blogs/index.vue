@@ -1,5 +1,5 @@
 <template>
-  <div class="blogs-page">
+  <div class="blogs-page page-component">
     <h1 class="title">Blogs</h1>
     <ClientOnly>
       <pages-blogs-error v-if="blogStore.error" :error="blogStore.error" />
@@ -26,9 +26,6 @@ await blogStore.fetchBlogs();
 
 <style lang="scss" scoped>
 .blogs-page {
-  width: 100vw;
-  min-height: 100vh;
-  padding: var(--page-offset-padding);
   .title {
     margin-bottom: 20px;
     font-size: 48px;
