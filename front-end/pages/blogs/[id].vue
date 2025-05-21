@@ -1,16 +1,12 @@
 <template>
-  <div class="blog-details">
-    <h1 class="title">{{ blogDetailsStore.blog?.title || "Loading..." }}</h1>
-    <div v-if="error" class="error-message">
-      {{ error }}
-    </div>
-    <div v-else-if="loading" class="loading">Loading blog details...</div>
-    <div v-else class="content">
-      <p class="date" v-if="blogDetailsStore.blog?.createdAt">
-        {{ new Date(blogDetailsStore.blog.createdAt).toLocaleDateString() }}
+  <div class="blog-details page-component">
+    <h1 class="title">{{ blogsStore.blog?.title }}</h1>
+    <div class="content">
+      <p class="date" v-if="blogsStore.blog?.createdAt">
+        {{ new Date(blogsStore.blog?.createdAt).toLocaleDateString() }}
       </p>
       <div class="blog-content">
-        {{ blogDetailsStore.blog?.content }}
+        {{ blogsStore.blog?.content }}
       </div>
     </div>
     <nuxt-link to="/blogs" class="back-link">Back to Blogs</nuxt-link>
@@ -18,39 +14,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useBlogDetailsStore } from "@/store/blog-details";
+import { useBlogStore } from "@/store/blogs";
 
-const blogDetailsStore = useBlogDetailsStore();
+const blogsStore = useBlogStore();
 const route = useRoute();
-const error = ref(null);
-const loading = ref(true);
 
-const blogId = route.params.id;
-
-async function fetchBlogDetails() {
-  try {
-    loading.value = true;
-    await blogDetailsStore.getBlogDetails(blogId);
-    loading.value = false;
-  } catch (err) {
-    error.value = "Failed to load blog details";
-    loading.value = false;
-    console.error("Error loading blog details:", err);
-  }
-}
-
-onMounted(() => {
-  fetchBlogDetails();
-});
+await blogsStore.getBlogDetails(route.params.id);
 </script>
 
 <style lang="scss" scoped>
 .blog-details {
-  width: 100vw;
-  min-height: 100vh;
-  padding: var(--page-offset-padding);
-
   .title {
     margin-bottom: 20px;
     font-size: 48px;

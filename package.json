@@ -1,0 +1,8 @@
+{
+  "name": "advanced-node",
+  "version": "1.0.1",
+  "scripts": {
+    "dev": "(cd back-end; npm run server;) & (cd front-end; npm run dev)",
+    "install-both": "(cd back-end; npm i;) & (cd front-end; npm i)"
+  }
+}

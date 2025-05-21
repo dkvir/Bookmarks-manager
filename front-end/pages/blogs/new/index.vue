@@ -1,5 +1,5 @@
 <template>
-  <div class="new-blog">
+  <div class="new-blog page-component">
     <h1 class="title">Create a New Blog</h1>
     <div v-if="blogStore.error" class="error-message">
       {{ blogStore.error }}
